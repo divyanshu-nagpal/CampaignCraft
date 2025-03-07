@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tagline & Campaign Idea Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #38b000;
+            --gradient: linear-gradient(135deg, #4361ee, #7209b7);
+            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --animation-speed: 30s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.15;
+            border-radius: 50%;
+            animation: float var(--animation-speed) infinite ease-in-out;
+        }
+        
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            top: 10%;
+            right: 10%;
+            animation-delay: -5s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            bottom: 10%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+        
+        .shape:nth-child(4) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            bottom: 10%;
+            right: 10%;
+            animation-delay: -15s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            50% {
+                transform: translate(50px, 50px) rotate(180deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .logo {
+            background: var(--gradient);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(114, 9, 183, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(114, 9, 183, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(114, 9, 183, 0);
+            }
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex: 1;
+            align-items: start;
+            max-width: 1200px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 992px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-card,
+        .results-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-card:hover,
+        .results-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .card-header h2 {
+            position: relative;
+            font-weight: 600;
+            font-size: 1.4rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-header h2 i {
+            margin-right: 10px;
+        }
+        
+        form {
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+            text-align: left;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+        
+        input::placeholder {
+            color: #bbb;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .select-container {
+            position: relative;
+        }
+        
+        .select-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            pointer-events: none;
+        }
+        
+        select {
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            margin-top: auto;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114, 9, 183, 0.3);
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        button:hover::after {
+            opacity: 1;
+            animation: ripple 1s linear;
+        }
+        
+        @keyframes ripple {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        button i {
+            font-size: 1.1rem;
+        }
+        
+        .secondary-btn {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .secondary-btn:hover {
+            background: rgba(67, 97, 238, 0.1);
+            box-shadow: none;
+        }
+        
+        .results-card {
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .results-content {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+        
+        .spinner-container {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #777;
+            font-size: 1.1rem;
+        }
+        
+        .results-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+            margin-top: auto;
+        }
+        
+        .error-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff5f5;
+            color: #e53e3e;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .error-message i {
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--primary);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            text-align: center;
+        }
+        
+        .idea-item {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            text-align: left;
+        }
+        
+        .idea-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            background: #f0f4ff;
+        }
+        
+        .tagline {
+            display: inline-block;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0.5rem 0;
+        }
+        
+        strong {
+            color: var(--secondary);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #777;
+            width: 100%;
+        }
+        
+        footer p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        footer i {
+            color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation">
+        <div class="shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <h1>Tagline Generator</h1>
+            <p>Create memorable marketing campaigns in seconds</p>
+        </header>
+
+        <div class="app-container">
+            <div class="form-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-pen-fancy"></i> Enter Your Details</h2>
+                </div>
+                <form id="ideaForm">
+                    <div class="input-group">
+                        <label for="product_name">Product Name</label>
+                        <div class="input-container">
+                            <i class="fas fa-tag input-icon"></i>
+                            <input type="text" id="product_name" name="product_name" required 
+                                placeholder="e.g., EcoBreeze, FitTrack, AI-Assistant">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="product_category">Product Category</label>
+                        <div class="input-container">
+                            <i class="fas fa-folder input-icon"></i>
+                            <input type="text" id="product_category" name="product_category" required 
+                                placeholder="e.g., electronics, health, AI tools">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="product_features">Key Features</label>
+                        <div class="input-container">
+                            <i class="fas fa-list-check input-icon"></i>
+                            <input type="text" id="product_features" name="product_features" required 
+                                placeholder="e.g., eco-friendly, AI-powered, budget-friendly">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="target_audience">Target Audience</label>
+                        <div class="input-container">
+                            <i class="fas fa-users input-icon"></i>
+                            <input type="text" id="target_audience" name="target_audience" required 
+                                placeholder="e.g., young professionals, fitness enthusiasts">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="num_ideas">Number of Ideas</label>
+                            <div class="select-container">
+                                <select id="num_ideas" name="num_ideas">
+                                    <option value="1">1</option>
+                                    <option value="3" selected>3</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                </select>
+                                <i class="fas fa-chevron-down select-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="tone">Tone</label>
+                            <div class="select-container">
+                                <select id="tone" name="tone">
+                                    <option value="professional" selected>Professional</option>
+                                    <option value="casual">Casual</option>
+                                    <option value="humorous">Humorous</option>
+                                    <option value="inspirational">Inspirational</option>
+                                    <option value="bold">Bold</option>
+                                </select>
+                                <i class="fas fa-chevron-down select-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="generateBtn">
+                        <i class="fas fa-wand-magic-sparkles"></i> Generate Ideas
+                    </button>
+                </form>
+            </div>
+
+            <div class="results-card" id="resultsContainer" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-bullhorn"></i> Your Campaign Ideas</h2>
+                </div>
+                <div id="loading" style="display: none;">
+                    <div class="spinner-container">
+                        <div class="spinner"></div>
+                    </div>
+                    <p class="loading-text">Brewing creative ideas...</p>
+                </div>
+                <div id="results" class="results-content">
+                    <!-- Results will appear here -->
+                </div>
+                <div class="results-actions">
+                    <button id="copyBtn">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                    <button id="newSearchBtn" class="secondary-btn">
+                        <i class="fas fa-redo"></i> New Search
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 Tagline Generator | Created with <i class="fas fa-heart"></i> for marketers</p>
+        </footer>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('ideaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const resultsContainer = document.getElementById('resultsContainer');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+
+            // Show loading indicator
+            resultsContainer.style.display = 'flex';
+            loading.style.display = 'block';
+            results.innerHTML = '';
+            
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // Format and display the results
+                results.innerHTML = formatResponseWithMarkdown(data.generated_ideas);
+
+            } catch (error) {
+                results.innerHTML = `<div class="error-message">
+                                      <i class="fas fa-exclamation-circle"></i>
+                                      <p>Error: ${error.message}</p>
+                                     </div>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+
+        // Copy results to clipboard
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const results = document.getElementById('results').innerText;
+            navigator.clipboard.writeText(results)
+                .then(() => {
+                    const copyBtn = document.getElementById('copyBtn');
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+        });
+        
+        // New search button
+        document.getElementById('newSearchBtn').addEventListener('click', () => {
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('ideaForm').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Format response with markdown - updated to remove the extra prefix lines
+        function formatResponseWithMarkdown(text) {
+            if (!text) return "<p class='no-results'>No results generated.</p>";
+
+            // Handle line breaks
+            let formatted = text.replace(/\n/g, '<br>');
+
+            // Format titles/headings (# Title)
+            formatted = formatted.replace(/#{1,6}\s+(.*?)(?:<br>|$)/g, '<h3>$1</h3>');
+
+            // Format list items - clean simplified format
+            formatted = formatted.replace(/(\d+\.\s+)(.*?)(?:<br>|$)/g, 
+                '<div class="idea-item">$1 $2</div>');
+
+            // Bold text
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // Italic text
+            formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Add tagline highlight
+            formatted = formatted.replace(/"([^"]+)"/g, '<span class="tagline">"$1"</span>');
+
+            return formatted;
+        }
+    </script>
+</body>
+</html>
