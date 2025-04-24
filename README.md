@@ -1,4 +1,4 @@
-🎯 CampaignCraft
+##🎯 CampaignCraft##
 CampaignCraft is a Generative AI-powered tool designed to help marketing teams quickly generate creative, targeted taglines based on product features and audience profiles. Whether you're launching a new product or revamping your brand messaging, CampaignCraft gives you instant inspiration—powered by AI.
 
 🧩 What It Does
